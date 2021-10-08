@@ -239,13 +239,14 @@ class Viewport : public QGLWidget {
 
   // todo: rename to TilePoints, TileRemissions, TileLabels, TileVisible, TileScanIndexes.
   glow::GlBuffer<glow::vec4> bufPoints_{glow::BufferTarget::ARRAY_BUFFER, glow::BufferUsage::DYNAMIC_DRAW};
+  glow::GlBuffer<uint32_t> bufColors_{glow::BufferTarget::ARRAY_BUFFER, glow::BufferUsage::DYNAMIC_DRAW};
   glow::GlBuffer<uint32_t> bufLabels_{glow::BufferTarget::ARRAY_BUFFER, glow::BufferUsage::DYNAMIC_DRAW};
   glow::GlBuffer<uint32_t> bufVisible_{glow::BufferTarget::ARRAY_BUFFER, glow::BufferUsage::DYNAMIC_DRAW};
   glow::GlBuffer<glow::vec2> bufScanIndexes_{glow::BufferTarget::ARRAY_BUFFER, glow::BufferUsage::DYNAMIC_DRAW};
 
   // buffers used for copying points to tile buffers.
   glow::GlBuffer<Point3f> bufTempPoints_{glow::BufferTarget::ARRAY_BUFFER, glow::BufferUsage::DYNAMIC_DRAW};
-  glow::GlBuffer<float> bufTempRemissions_{glow::BufferTarget::ARRAY_BUFFER, glow::BufferUsage::DYNAMIC_DRAW};
+  glow::GlBuffer<uint32_t> bufTempColors_{glow::BufferTarget::ARRAY_BUFFER, glow::BufferUsage::DYNAMIC_DRAW};
   glow::GlBuffer<uint32_t> bufTempLabels_{glow::BufferTarget::ARRAY_BUFFER, glow::BufferUsage::DYNAMIC_DRAW};
   glow::GlBuffer<uint32_t> bufTempVisible_{glow::BufferTarget::ARRAY_BUFFER, glow::BufferUsage::DYNAMIC_DRAW};
 

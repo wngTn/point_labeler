@@ -53,12 +53,12 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f)
   bufScanIndexes_.resize(max_size);
 
   bufTempPoints_.reserve(maxPointsPerScan_);
-  bufTempRemissions_.reserve(maxPointsPerScan_);
+  bufTempColors_.reserve(maxPointsPerScan_);
   bufTempLabels_.reserve(maxPointsPerScan_);
   bufTempVisible_.reserve(maxPointsPerScan_);
 
   uint32_t tempMem = bufTempPoints_.memorySize();
-  tempMem += bufTempRemissions_.memorySize();
+  tempMem += bufTempColors_.memorySize();
   tempMem += bufTempLabels_.memorySize();
   tempMem += bufTempVisible_.memorySize();
 
@@ -73,6 +73,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f)
   tfUpdateVisibility_.attach({"out_visible"}, bufUpdatedVisiblity_);
 
   tfFillTilePoints_.attach({"out_point"}, bufPoints_);
+  //tfFillTilePoints_.attach({"out_color"}, bufLabels_);
   tfFillTilePoints_.attach({"out_label"}, bufLabels_);
   tfFillTilePoints_.attach({"out_visible"}, bufVisible_);
   tfFillTilePoints_.attach({"out_scanindex"}, bufScanIndexes_);
@@ -231,9 +232,12 @@ void Viewport::initVertexBuffers() {
   vao_points_.setVertexAttribute(0, bufPoints_, 4, AttributeType::FLOAT, false, sizeof(glow::vec4), nullptr);
   vao_points_.setVertexAttribute(1, bufLabels_, 1, AttributeType::UNSIGNED_INT, false, sizeof(uint32_t), nullptr);
   vao_points_.setVertexAttribute(2, bufVisible_, 1, AttributeType::UNSIGNED_INT, false, sizeof(uint32_t), nullptr);
+  vao_points_.setVertexAttribute(3, bufLabels_, 1, AttributeType::UNSIGNED_INT, false, sizeof(uint32_t), nullptr);
+
+
 
   vao_temp_points_.setVertexAttribute(0, bufTempPoints_, 3, AttributeType::FLOAT, false, sizeof(Point3f), nullptr);
-  vao_temp_points_.setVertexAttribute(1, bufTempRemissions_, 1, AttributeType::FLOAT, false, sizeof(float), nullptr);
+  vao_temp_points_.setVertexAttribute(1, bufTempColors_, 1, AttributeType::UNSIGNED_INT, false, sizeof(uint32_t), nullptr);
   vao_temp_points_.setVertexAttribute(2, bufTempLabels_, 1, AttributeType::UNSIGNED_INT, false, sizeof(uint32_t),
                                       nullptr);
   vao_temp_points_.setVertexAttribute(3, bufTempVisible_, 1, AttributeType::UNSIGNED_INT, false, sizeof(uint32_t),
@@ -265,12 +269,14 @@ void Viewport::setMaximumScans(uint32_t numScans) {
   bufPoses_.resize(maxScans_);
   bufPoints_.resize(max_size);
   bufVisible_.resize(max_size);
+  bufColors_.resize(max_size);
   bufLabels_.resize(max_size);
   bufScanIndexes_.resize(max_size);
 
   uint32_t memTile = 0;  // = bufPoses_.memorySize();
   memTile += bufPoints_.memorySize();
   memTile += bufVisible_.memorySize();
+  memTile += bufColors_.memorySize();
   memTile += bufLabels_.memorySize();
   memTile += bufScanIndexes_.memorySize();
 
@@ -321,10 +327,10 @@ void Viewport::setPoints(const std::vector<PointcloudPtr>& p, std::vector<Labels
 
       // copy data from CPU -> GPU.
       bufTempPoints_.assign(points_[t]->points);
-      if (points_[t]->hasRemissions())
-        bufTempRemissions_.assign(points_[t]->remissions);
+      if (points_[t]->hasColors())
+        bufTempColors_.assign(points_[t]->colors);
       else
-        bufTempRemissions_.assign(std::vector<float>(points_[t]->size(), 1.0f));
+        bufTempColors_.assign(std::vector<uint32_t>(points_[t]->size(), 0xFF5500));
       bufTempLabels_.assign(*(labels_[t]));
       bufTempVisible_.assign(visible);
 
@@ -339,6 +345,7 @@ void Viewport::setPoints(const std::vector<PointcloudPtr>& p, std::vector<Labels
     glDisable(GL_RASTERIZER_DISCARD);
 
     bufPoints_.resize(numCopiedPoints);
+    bufColors_.resize(numCopiedPoints);
     bufLabels_.resize(numCopiedPoints);
     bufVisible_.resize(numCopiedPoints);
     bufScanIndexes_.resize(numCopiedPoints);

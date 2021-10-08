@@ -3,7 +3,7 @@
 layout(points) in;
 layout(points, max_vertices = 1) out;
 
-in POINT 
+in POINT
 {
   bool valid;
   vec4 point;
@@ -29,7 +29,7 @@ void main()
     out_scanindex = gs_in[0].scanindex;
 
     EmitVertex();
-    EndPrimitive();  
+    EndPrimitive();
   }
-  
+
 }

@@ -17,6 +17,9 @@ class KITTICalibration {
   /** \brief initialize calibration matrices from given file in KITTI format. **/
   void initialize(const std::string& filename);
 
+  /** \brief initialize calibration with default values instead of calibration file**/
+  void initializeDefault();
+
   /** \brief remove all matrices. **/
   void clear();
 

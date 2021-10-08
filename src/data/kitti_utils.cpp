@@ -28,6 +28,22 @@ const Eigen::Matrix4f& KITTICalibration::operator[](const std::string& name) con
   return m_.find(name)->second;
 }
 
+void KITTICalibration::initializeDefault() {
+  m_.clear();
+
+  std::vector<float> entries {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0};
+  std::vector<std::string> names{"P0", "P1", "P2", "P3", "Tr"};
+
+  for (int i = 0; i < names.size(); ++i) {
+    Eigen::Matrix4f m = Eigen::Matrix4f::Identity();
+    for (uint32_t j = 0; j < 12; ++j) {
+      m(j / 4, j - int(j / 4) * 4) = entries[j];
+    }
+    m_[names[i]] = m;
+  }
+
+}
+
 void KITTICalibration::initialize(const std::string& filename) {
   m_.clear();
   std::ifstream cin(filename.c_str());

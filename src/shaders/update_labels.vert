@@ -72,39 +72,39 @@ void main()
   // upper 16 bits correspond to the class.
   uint label = in_label & uint(0xFFFF);
   uint instance = (in_label >> 16) & uint(0xFFFF);
-  
+
   // NOTE: labeling points destroys the instance id.
 
   float range = length(in_vertex.xyz);
   float in_remission = in_vertex.w;
-  
+
   vec4 point = mvp * vec4(in_vertex.xyz, 1.0);
   point = vec4(point.x/point.w, point.y/point.w, point.z/point.w, 1.0);
   gl_Position = mvp * vec4(in_vertex.xyz, 1.0);
-  
+
   out_label = in_label;
-    
-  vec3 pos =  vec3(0.5f * (point.x + 1.0) * width, 0.5f * (point.y + 1.0) * height, 0.5f * (point.z + 1.0)); 
+
+  vec3 pos =  vec3(0.5f * (point.x + 1.0) * width, 0.5f * (point.y + 1.0) * height, 0.5f * (point.z + 1.0));
   pos.y = height - pos.y;
-  
+
   vec4 v_global = vec4(in_vertex.xyz, 1.0);
   vec2 v = v_global.xy - tilePos;
-  
+
   //vec4 plane_normal = pose * vec4(planeDirection * float(planeDimension == 0), planeDirection * float(planeDimension == 1), planeDirection * float(planeDimension == 2), 0);
-  
-  bool visible = (in_visible > uint(0)) && (!removeGround || v_global.z > texture(heightMap, v / tileSize + 0.5).r + groundThreshold); 
+
+  bool visible = (in_visible > uint(0)) && (!removeGround || v_global.z > texture(heightMap, v / tileSize + 0.5).r + groundThreshold);
 
   //if(planeRemoval) visible = visible && ((dot(plane_normal, in_vertex) - planeThreshold)  < 0);
-  
+
   if(planeRemovalNormal){
     vec3 pn = (plane_pose * vec4(planeNormal, 0.0)).xyz;
     vec3 po = (plane_pose * vec4(0,0,0,1)).xyz;
-    
+
     float scalar_product = dot(in_vertex.xyz - po.xyz, pn);
-    
+
     visible = visible && (planeDirectionNormal * (scalar_product - planeThresholdNormal) < 0);
   }
-  
+
   visible = visible && (!hideLabeledInstances || (instance == uint(0)));
 
 
@@ -112,16 +112,16 @@ void main()
   {
     if(labelInstances)
     {
-        // instanceLabelingMode: 
-        //     0 -- add points in selected region from same class, 
-        //     1 -- split points in selected region from same class, 
+        // instanceLabelingMode:
+        //     0 -- add points in selected region from same class,
+        //     1 -- split points in selected region from same class,
         //     2 -- remove points from given class and instance.
         //     3 -- create instance for given class.
         //     4 -- join instances.
-    
+
         bool consistent_label = (label == selectedInstanceLabel);
         bool consistent_instanceId = ((instanceLabelingMode != 2 && instanceLabelingMode != 4)  || (instance == selectedInstanceId));
-    
+
         if(consistent_label && consistent_instanceId)
         {
             if(instanceLabelingMode == 4)
@@ -135,7 +135,7 @@ void main()
 	              vec2 v1 = texture(triangles, vec2(3 * i + 0.5, 0.5)).xy * vec2(width, height);
 	              vec2 v2 = texture(triangles, vec2(3 * i + 1.5, 0.5)).xy * vec2(width, height);
 	              vec2 v3 = texture(triangles, vec2(3 * i + 2.5, 0.5)).xy * vec2(width, height);
-	    
+
 	              if(insideTriangle(pos.xy, v1, v2, v3))
 	              {
 	                if(instanceLabelingMode == 0) // add points
@@ -154,7 +154,7 @@ void main()
 	                {
 	                    out_label = (newInstanceId << 16) | label;
 	                }
-	                
+
 	                break;
 	              }
 	            }
@@ -178,7 +178,7 @@ void main()
 	            out_label = new_label;
 	          }
 	        }
-	      } 
+	      }
 	      else if(labelingMode == 1)
 	      {
 	        for(int i = 0; i < numTriangles; ++i)
@@ -186,7 +186,7 @@ void main()
 	          vec2 v1 = texture(triangles, vec2(3 * i + 0.5, 0.5)).xy * vec2(width, height);
 	          vec2 v2 = texture(triangles, vec2(3 * i + 1.5, 0.5)).xy * vec2(width, height);
 	          vec2 v3 = texture(triangles, vec2(3 * i + 2.5, 0.5)).xy * vec2(width, height);
-	
+
 	          if(insideTriangle(pos.xy, v1, v2, v3) && (overwrite || label == uint(0)))
 	          {
 	            out_label = new_label;

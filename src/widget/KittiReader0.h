@@ -32,13 +32,13 @@ class KittiReader {
     float x, y, size;               // actual world coordinates.
   };
 
-  /** \brief get poses and filenames of pointclouds, labels, etc.
+  /** \brief get poses and filenames of velodyne, labels, etc.
    *  If the labels directory does not exist, the directory is created.
    **/
   void initialize(const QString& directory);
 
   /** \brief number of scans. **/
-  uint32_t count() const { return pointclouds_filenames_.size(); }
+  uint32_t count() const { return velodyne_filenames_.size(); }
 
   void setMaximumDistance(float distance) { maxDistance_ = distance; }
 
@@ -77,7 +77,7 @@ class KittiReader {
   QDir base_dir_;
   KITTICalibration calib_;
   std::vector<Eigen::Matrix4f> poses_;
-  std::vector<std::string> pointclouds_filenames_;
+  std::vector<std::string> velodyne_filenames_;
   std::vector<std::string> label_filenames_;
   std::vector<std::string> image_filenames_;
 

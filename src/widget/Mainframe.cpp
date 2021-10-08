@@ -529,10 +529,14 @@ void Mainframe::open() {
   if (!retValue.isNull()) {
     QDir base_dir(retValue);
 
-    if (!base_dir.exists("velodyne") || !base_dir.exists("poses.txt")) {
-      std::cout << "[ERROR] velodyne or poses.txt missing." << std::endl;
+    if (!base_dir.exists("pointclouds")) {
+      std::cout << "[ERROR] pointclouds missing." << std::endl;
       return;
     }
+    /*if (!base_dir.exists("poses.txt")) {
+      std::cout << "[ERROR] poses.txt missing." << std::endl;
+      return;
+    }*/
 
     reader_.initialize(retValue);
 

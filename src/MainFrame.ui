@@ -292,7 +292,7 @@
          <item>
           <widget class="QCheckBox" name="chkShowRemission">
            <property name="text">
-            <string>remission</string>
+            <string>color</string>
            </property>
            <property name="checked">
             <bool>true</bool>

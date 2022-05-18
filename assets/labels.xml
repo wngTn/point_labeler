@@ -12,6 +12,28 @@
   </label>
 
 	<label>
+		<id>1</id>
+		<name>wall</name>
+		<description>Walls of the room</description>
+		<color>255 0 0</color>
+		<root>wall</root>
+		<macro>wall</macro>
+		<category>wall</category>
+		<instanceable>true</instanceable>
+	</label>
+
+		<label>
+		<id>2</id>
+		<name>ground</name>
+		<description>Ground of the room</description>
+		<color>0 0 255</color>
+		<root>ground</root>
+		<macro>ground</macro>
+		<category>ground</category>
+		<instanceable>true</instanceable>
+	</label>
+
+<!-- <label>
     <id>1</id>
     <name>outlier</name>
     <description>all points which are outliers, i.e., caused by reflection, etc..</description>
@@ -19,9 +41,9 @@
 	<root>void</root>
 	<macro></macro>
 	<category>outlier</category>
-  </label>
+  </label> -->
 	
-  <label>
+  <!-- <label>
 		<id>10</id>
 		<name>car</name>
 		<description>This includes cars, jeeps, SUVs, vans with a continuous body shape (i.e. the driver cabin and cargo compartment are one)</description>
@@ -31,8 +53,8 @@
 		<category>car</category>
 		<moving>252</moving>
 		<instanceable>true</instanceable>
-	</label>
-  <label>
+	</label> -->
+  <!-- <label>
 		<id>11</id>
 		<name>bicycle</name>
 		<description>Includes bicycles without the cyclist or possibly other passengers. The cyclist and passengers recieve the label cyclist.</description>
@@ -149,7 +171,7 @@
 		<root>ground</root>
 		<macro>flat</macro>
 		<category>parking</category>
-	</label>
+	</label> -->
  	<!--  label>
 		<id>45</id>
 		<name>pedestrian area</name>
@@ -169,7 +191,7 @@
 		<macro>flat</macro>
 		<category>serice lane</category>
 	</label-->
- 	<label>
+ 	<!-- <label>
 		<id>48</id>
 		<name>sidewalk</name>
 		<description>Areas used mainly by pedestrians, bicycles, but not meant for driving.</description>
@@ -215,7 +237,7 @@
     <root>structure</root>
     <macro>structure</macro>
     <category>other-structure</category>
-  </label>
+  </label> -->
 
   <!--label>
     <id>61</id>
@@ -226,7 +248,7 @@
     <macro></macro>
     <category>crosswalk zebra</category>
   </label-->
-  <label>
+  <!-- <label>
     <id>60</id>
     <name>lane marking</name>
     <description>Other lane markings, including dashed and 
@@ -282,7 +304,7 @@
     <root>object</root>
     <macro>traffic-sign</macro>
     <category>traffic sign</category>
-  </label>
+  </label> -->
 
   <!--label>
     <id>90</id>
@@ -303,7 +325,7 @@
     <category>trash can</category>
   </label-->
 
-  <label>
+  <!-- <label>
     <id>99</id>
     <name>other-object</name>
     <description>other small/convex objects on the street, where we now have not a specific label.</description>
@@ -311,6 +333,6 @@
     <root>object</root>
     <macro>object</macro>
     <category>other-object</category>
-  </label>
+  </label> -->
 
 </config>

@@ -444,6 +444,7 @@ void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
     std::cout << "Could not find end of header. (\"end_header\" not found)" << std::endl;
     return;
   }
+  // TODO TONY
   std::vector<Point3f>& points = scan.points;
   std::vector<uint32_t>& colors = scan.colors;
   uint32_t num_points = 0;

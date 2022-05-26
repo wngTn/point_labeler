@@ -48,6 +48,7 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f)
 
   bufPoses_.resize(maxScans_);
   bufPoints_.resize(max_size);
+  bufColors_.resize(max_size);
   bufVisible_.resize(max_size);
   bufLabels_.resize(max_size);
   bufScanIndexes_.resize(max_size);
@@ -232,7 +233,7 @@ void Viewport::initVertexBuffers() {
   vao_points_.setVertexAttribute(0, bufPoints_, 4, AttributeType::FLOAT, false, sizeof(glow::vec4), nullptr);
   vao_points_.setVertexAttribute(1, bufLabels_, 1, AttributeType::UNSIGNED_INT, false, sizeof(uint32_t), nullptr);
   vao_points_.setVertexAttribute(2, bufVisible_, 1, AttributeType::UNSIGNED_INT, false, sizeof(uint32_t), nullptr);
-  vao_points_.setVertexAttribute(3, bufLabels_, 1, AttributeType::UNSIGNED_INT, false, sizeof(uint32_t), nullptr);
+  vao_points_.setVertexAttribute(3, bufColors_, 1, AttributeType::UNSIGNED_INT, false, sizeof(uint32_t), nullptr);
 
 
 
@@ -327,8 +328,10 @@ void Viewport::setPoints(const std::vector<PointcloudPtr>& p, std::vector<Labels
 
       // copy data from CPU -> GPU.
       bufTempPoints_.assign(points_[t]->points);
-      if (points_[t]->hasColors())
+      if (points_[t]->hasColors()){
         bufTempColors_.assign(points_[t]->colors);
+        bufColors_.assign(points_[t]->colors);
+      }
       else
         bufTempColors_.assign(std::vector<uint32_t>(points_[t]->size(), 0xFF5500));
       bufTempLabels_.assign(*(labels_[t]));
@@ -713,6 +716,7 @@ void Viewport::resizeGL(int w, int h) {
 }
 
 void Viewport::paintGL() {
+  std::cout<<"RUNNING PAINT GL FUNCTION"<<std::endl;
   glow::_CheckGlError(__FILE__, __LINE__);
 
   glEnable(GL_DEPTH_TEST);
@@ -769,6 +773,8 @@ void Viewport::paintGL() {
     prgDrawPoints_.setUniform(GlUniform<float>("planeDirectionNormal", planeDirectionNormal_));
     prgDrawPoints_.setUniform(GlUniform<bool>("drawInstances", false));
 
+    prgDrawPoints_.setUniform(GlUniform<bool>("alpha", true));
+
     prgDrawPoints_.setUniform(GlUniform<bool>("hideLabeledInstances", drawingOption_["hide labeled instances"]));
 
     //    prgDrawPoints_.setUniform(GlUniform<bool>("carAsBase", drawingOption_["carAsBase"]));
@@ -791,9 +797,17 @@ void Viewport::paintGL() {
 
     prgDrawPoints_.setUniform(mvp_);
 
-    if (showSingleScan)
+    if (showSingleScan) {
+      auto test = std::vector<uint32_t>(10);
+      bufColors_.get(test);
+      std::cout<<"Zahl"<<test[0]<<std::endl;
       glDrawArrays(GL_POINTS, scanInfos_[singleScanIdx_].start, scanInfos_[singleScanIdx_].size);
+      std::cout<<"You got dunked"<<std::endl;
+    }
     else if (showScanRange) {
+      auto test = std::vector<uint32_t>(10);
+      bufColors_.get(test);
+      std::cout<<"Zahl"<<test[0]<<std::endl;
       uint32_t start = scanInfos_[scanRangeBegin_].start;
       uint32_t count =
           scanInfos_[scanRangeEnd_].start + scanInfos_[scanRangeEnd_].size - scanInfos_[scanRangeBegin_].start;

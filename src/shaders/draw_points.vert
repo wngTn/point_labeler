@@ -3,6 +3,7 @@
 layout (location = 0) in vec4  in_vertex;
 layout (location = 1) in uint  in_label;
 layout (location = 2) in uint  in_visible;
+layout (location = 3) in uint  in_real_color;
 
 uniform sampler2DRect label_colors;
 uniform sampler2D     heightMap;
@@ -161,6 +162,10 @@ void main()
         {
           float r = in_remission * 0.7 + 0.3; // r in [0.3, 1.0]
           color = vec4(hsv2rgb(vec3(1, 1, r) * rgb2hsv(vec3(0.5, 0.5, 0.5))), 1.0);
+          float rr = float(in_real_color >> 16);
+          float gg = float((in_real_color >> 8) & uint(0x0000FF));
+          float bb = float(in_real_color & uint(0x0000FF));
+          color = vec4(rr / 255.0f, gg / 255.0f, bb / 255.0f, 0.8);
         }
 
       }

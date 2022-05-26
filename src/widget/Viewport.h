@@ -115,6 +115,10 @@ class Viewport : public QGLWidget {
     updateGL();
   }
 
+  /**
+   * graycolor: idx = 0
+   * viridis: idx = 1 ...
+  */
   void setRemissionColorMap(int32_t idx) {
     remissionColormap_ = idx;
     updateGL();
@@ -163,7 +167,6 @@ class Viewport : public QGLWidget {
     QGLFormat fmt = this->format();
     std::cout << "OpenGL Context Version " << fmt.majorVersion() << "." << fmt.minorVersion() << " "
               << ((fmt.profile() == QGLFormat::CoreProfile) ? "core profile" : "compatibility profile") << std::endl;
-
     makeCurrent();
     glow::inititializeGLEW();
 

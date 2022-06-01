@@ -25,9 +25,10 @@ def load_files(path):
 def concat(files):
     files = np.vstack(files)
     
-    # for i in range(files.shape[1]):
-    for i in range(1):
+    for i in range(files.shape[1]):
+    # for i in range(1):
         pointclouds_files = files[:, i]
+        base_name = os.path.basename(pointclouds_files[0])
         pointclouds_load = []
         pointclouds_color = []
         for pointcloud_file in pointclouds_files:
@@ -42,7 +43,8 @@ def concat(files):
         pcd.points = o3d.utility.Vector3dVector(pcd_load)
         pcd.colors = o3d.utility.Vector3dVector(pcd_color)
 
-        o3d.io.write_point_cloud('../../../data_2/pointclouds/test.ply', pcd, write_ascii=True)
+        o3d.io.write_point_cloud(os.path.join('../../../data_2/pointclouds/', base_name), pcd, write_ascii=True)
+        print(f'Written: {base_name}')
 
 
 def main():

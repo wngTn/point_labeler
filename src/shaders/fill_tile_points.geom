@@ -10,13 +10,15 @@ in POINT
   uint label;
   uint visible;
   vec2 scanindex;
+  uint color;
 } gs_in[];
 
 
 out vec4  out_point;
 out uint  out_label;
-out uint  out_visible;
+// out uint  out_visible;
 out vec2  out_scanindex;
+out uint  out_color;
 
 
 void main()
@@ -25,8 +27,9 @@ void main()
   {
     out_point = gs_in[0].point;
     out_label = gs_in[0].label;
-    out_visible = gs_in[0].visible;
+    // out_visible = gs_in[0].visible;
     out_scanindex = gs_in[0].scanindex;
+    out_color = gs_in[0].color;
 
     EmitVertex();
     EndPrimitive();

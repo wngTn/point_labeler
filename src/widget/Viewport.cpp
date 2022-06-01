@@ -74,10 +74,10 @@ Viewport::Viewport(QWidget* parent, Qt::WindowFlags f)
   tfUpdateVisibility_.attach({"out_visible"}, bufUpdatedVisiblity_);
 
   tfFillTilePoints_.attach({"out_point"}, bufPoints_);
-  //tfFillTilePoints_.attach({"out_color"}, bufLabels_);
   tfFillTilePoints_.attach({"out_label"}, bufLabels_);
-  tfFillTilePoints_.attach({"out_visible"}, bufVisible_);
+  // tfFillTilePoints_.attach({"out_visible"}, bufVisible_);
   tfFillTilePoints_.attach({"out_scanindex"}, bufScanIndexes_);
+  tfFillTilePoints_.attach({"out_color"}, bufColors_);
 
   bufSelectedLabels_.resize(maxPointsPerScan_);
   tfSelectedLabels_.attach({"out_label"}, bufSelectedLabels_);
@@ -292,6 +292,14 @@ void Viewport::setPoints(const std::vector<PointcloudPtr>& p, std::vector<Labels
   points_ = p;
   labels_ = l;
 
+  // auto var = std::vector<glow::vec4>{};
+  // bufPoints_.get(var, 0, 5);
+  // std::cout<<"--- Checkpoint 1: content: "<<var[0]<<std::endl;
+
+  //   auto var2 = std::vector<uint32_t>{};
+  // bufColors_.get(var2, 0, 5);
+  // std::cout<<"--- Checkpoint 1 (Colors): content: "<<var2[0]<<std::endl;
+
   //  Stopwatch::tic();
 
   {
@@ -330,7 +338,7 @@ void Viewport::setPoints(const std::vector<PointcloudPtr>& p, std::vector<Labels
       bufTempPoints_.assign(points_[t]->points);
       if (points_[t]->hasColors()){
         bufTempColors_.assign(points_[t]->colors);
-        bufColors_.assign(points_[t]->colors);
+        // bufColors_.assign(points_[t]->colors);
       }
       else
         bufTempColors_.assign(std::vector<uint32_t>(points_[t]->size(), 0xFF5500));
@@ -370,6 +378,10 @@ void Viewport::setPoints(const std::vector<PointcloudPtr>& p, std::vector<Labels
     ScanInfo current;
     int32_t currentScanIndex{-1};
 
+    // auto var3 = std::vector<glow::vec4>{};
+    // bufPoints_.get(var3, 0, 5);
+    // std::cout<<"--- Checkpoint 3: content: "<<var3[0]<<std::endl;
+
     uint32_t count = 0;
     while (count * maxPointsPerScan_ < bufScanIndexes_.size()) {
       uint32_t read_size = std::min<uint32_t>(maxPointsPerScan_, bufScanIndexes_.size() - count * maxPointsPerScan_);
@@ -404,6 +416,7 @@ void Viewport::setPoints(const std::vector<PointcloudPtr>& p, std::vector<Labels
                            "the settings.cfg, but ensure that enough GPU memory is available.");
     }
   }
+
 
   glow::_CheckGlError(__FILE__, __LINE__);
 
@@ -716,7 +729,11 @@ void Viewport::resizeGL(int w, int h) {
 }
 
 void Viewport::paintGL() {
-  std::cout<<"RUNNING PAINT GL FUNCTION"<<std::endl;
+
+  std::vector<uint32_t> visible(bufVisible_.size(), 1);
+  bufVisible_.assign(visible);
+
+
   glow::_CheckGlError(__FILE__, __LINE__);
 
   glEnable(GL_DEPTH_TEST);
@@ -773,8 +790,6 @@ void Viewport::paintGL() {
     prgDrawPoints_.setUniform(GlUniform<float>("planeDirectionNormal", planeDirectionNormal_));
     prgDrawPoints_.setUniform(GlUniform<bool>("drawInstances", false));
 
-    prgDrawPoints_.setUniform(GlUniform<bool>("alpha", true));
-
     prgDrawPoints_.setUniform(GlUniform<bool>("hideLabeledInstances", drawingOption_["hide labeled instances"]));
 
     //    prgDrawPoints_.setUniform(GlUniform<bool>("carAsBase", drawingOption_["carAsBase"]));
@@ -798,16 +813,9 @@ void Viewport::paintGL() {
     prgDrawPoints_.setUniform(mvp_);
 
     if (showSingleScan) {
-      auto test = std::vector<uint32_t>(10);
-      bufColors_.get(test);
-      std::cout<<"Zahl"<<test[0]<<std::endl;
       glDrawArrays(GL_POINTS, scanInfos_[singleScanIdx_].start, scanInfos_[singleScanIdx_].size);
-      std::cout<<"You got dunked"<<std::endl;
     }
     else if (showScanRange) {
-      auto test = std::vector<uint32_t>(10);
-      bufColors_.get(test);
-      std::cout<<"Zahl"<<test[0]<<std::endl;
       uint32_t start = scanInfos_[scanRangeBegin_].start;
       uint32_t count =
           scanInfos_[scanRangeEnd_].start + scanInfos_[scanRangeEnd_].size - scanInfos_[scanRangeBegin_].start;

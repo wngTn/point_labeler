@@ -127,8 +127,6 @@ void main()
   if(!visible) gl_Position = vec4(-10, -10, -10, 1);
 
 
-  if(useRemission)
-  {
 
       in_remission = clamp(in_remission, 0.0, 1.0);
       if(label != uint(0))
@@ -165,14 +163,10 @@ void main()
           float rr = float(in_real_color >> 16);
           float gg = float((in_real_color >> 8) & uint(0x0000FF));
           float bb = float(in_real_color & uint(0x0000FF));
-          color = vec4(rr / 255.0f, gg / 255.0f, bb / 255.0f, 0.8);
+          color = vec4(rr / 255.0f, gg / 255.0f, bb / 255.0f, 1.0);
         }
 
       }
 
-  }
-  else
-  {
-    color = vec4(in_color.rgb, 1.0);
-  }
+
 }

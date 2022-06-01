@@ -1,7 +1,7 @@
 #version 330 core
 
 layout (location = 0) in vec3  in_vertex;
-layout (location = 1) in float in_remission;
+layout (location = 1) in uint  in_color;
 layout (location = 2) in uint  in_label;
 layout (location = 3) in uint  in_visible;
 
@@ -25,6 +25,7 @@ out POINT
   uint label;
   uint visible;
   vec2 scanindex;
+  uint color;
 } vs_out;
 
 
@@ -44,9 +45,10 @@ void main()
   if(inside_tile && !out_of_range/* && (addCarPoints || !is_car_point )*/)
   {
     vs_out.valid = true;
-    vs_out.point = vec4(v_global.xyz, in_remission);
+    vs_out.point = vec4(v_global.xyz, 0);
     vs_out.label = in_label;
     vs_out.visible = in_visible;
     vs_out.scanindex = vec2(scan, gl_VertexID);
+    vs_out.color = in_color;
   }
 }

@@ -43,7 +43,7 @@ def concat(files):
         pcd.points = o3d.utility.Vector3dVector(pcd_load)
         pcd.colors = o3d.utility.Vector3dVector(pcd_color)
 
-        o3d.io.write_point_cloud(os.path.join('../../../data_2/pointclouds/', base_name), pcd, write_ascii=True)
+        o3d.io.write_point_cloud(os.path.join('../../../data/pointclouds/', base_name), pcd)
         print(f'Written: {base_name}')
 
 

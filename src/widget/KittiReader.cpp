@@ -1,19 +1,20 @@
 #include <stdint.h>
 #include <widget/KittiReader.h>
+
 #include <QtCore/QDir>
 #include <boost/lexical_cast.hpp>
 #include <boost/tokenizer.hpp>
-#include <fstream>
-#include <iostream>
-#include <iomanip>
 #include <clocale>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
 #include <sstream>
+
+#include "happly.h"
 #include "rv/string_utils.h"
 
-#include <boost/lexical_cast.hpp>
-
 void KittiReader::initialize(const QString& directory) {
-  std::setlocale(LC_ALL,"en_US.utf8");
+  std::setlocale(LC_ALL, "en_US.utf8");
   pointclouds_filenames_.clear();
   label_filenames_.clear();
   image_filenames_.clear();
@@ -30,21 +31,19 @@ void KittiReader::initialize(const QString& directory) {
     pointclouds_filenames_.push_back(pointclouds_dir.filePath(entries.at(i)).toStdString());
   }
 
-  if (!base_dir_.exists("calib.txt")){
+  if (!base_dir_.exists("calib.txt")) {
     calib_.initializeDefault();
-    //throw std::runtime_error("Missing calibration file: " + base_dir_.filePath("calib.txt").toStdString());
-  }else{
+    // throw std::runtime_error("Missing calibration file: " + base_dir_.filePath("calib.txt").toStdString());
+  } else {
     calib_.initialize(base_dir_.filePath("calib.txt").toStdString());
   }
 
-  if (!base_dir_.exists("poses.txt")){
+  if (!base_dir_.exists("poses.txt")) {
     defaultPoses = true;
-    //throw std::runtime_error("Missing calibration file: " + base_dir_.filePath("calib.txt").toStdString());
-  }else{
+    // throw std::runtime_error("Missing calibration file: " + base_dir_.filePath("calib.txt").toStdString());
+  } else {
     readPoses(base_dir_.filePath("poses.txt").toStdString(), poses_);
   }
-
-
 
   // create label dir, etc.
   QDir labels_dir(base_dir_.filePath("labels"));
@@ -56,23 +55,26 @@ void KittiReader::initialize(const QString& directory) {
     QString filename = QFileInfo(QString::fromStdString(pointclouds_filenames_[i])).baseName() + ".label";
     if (!labels_dir.exists(filename)) {
       std::ifstream in(pointclouds_filenames_[i].c_str(), std::ifstream::in);
-      //TODO falsch!
+      // TODO falsch!
       uint32_t num_points = 0;
       std::string currentLine;
       bool headerFound = false;
-      while(std::getline(in, currentLine)){
-        if(currentLine.compare("end_header") == 0){
+      while (std::getline(in, currentLine)) {
+        if (currentLine.compare("end_header") == 0) {
           headerFound = true;
           break;
         }
       }
-      if(headerFound){
-        while (std::getline(in, currentLine))
-        {
-          num_points++;
-        }
-        if (num_points > 1){
-          num_points--;
+      if (headerFound) {
+        // while (std::getline(in, currentLine)) {
+        //   num_points++;
+        // }
+        happly::PLYData plyIn(pointclouds_filenames_[i].c_str(), false);
+        plyIn.validate();
+
+        num_points = plyIn.getVertexPositions().size();
+        if (num_points > 1) {
+          // num_points--;
           std::cout << num_points << " points, creating labels" << std::endl;
           std::ofstream out(labels_dir.filePath(filename).toStdString().c_str());
 
@@ -80,16 +82,13 @@ void KittiReader::initialize(const QString& directory) {
           out.write(reinterpret_cast<const char*>(labels.data()), num_points * sizeof(uint32_t));
 
           out.close();
-        }else{
+        } else {
           std::cout << "No points found!" << std::endl;
         }
-      }else{
+      } else {
         std::cout << "Could not find header..." << std::endl;
       }
       in.close();
-
-
-
     }
 
     label_filenames_.push_back(labels_dir.filePath(filename).toStdString());
@@ -111,12 +110,12 @@ void KittiReader::initialize(const QString& directory) {
   Eigen::Vector2f min = Eigen::Vector2f::Zero();
   Eigen::Vector2f max = Eigen::Vector2f::Zero();
 
-  if(defaultPoses){
+  if (defaultPoses) {
     min.x() = -maxDistance_;
     min.y() = -maxDistance_;
     max.x() = maxDistance_;
     max.y() = maxDistance_;
-  }else
+  } else
     for (uint32_t i = 0; i < poses_.size(); ++i) {
       Eigen::Vector4f t = poses_[i].col(3);
 
@@ -164,10 +163,10 @@ void KittiReader::initialize(const QString& directory) {
 
   uint32_t s;
   Eigen::Vector2f t;
-  if(defaultPoses){
-    t = Eigen::Vector2f(0,0);
+  if (defaultPoses) {
+    t = Eigen::Vector2f(0, 0);
     s = count();
-  }else{
+  } else {
     s = poses_.size();
   }
   for (uint32_t i = 0; i < s; ++i) {
@@ -311,9 +310,9 @@ void KittiReader::retrieve(uint32_t i, uint32_t j, std::vector<uint32_t>& indexe
       points.push_back(std::shared_ptr<Laserscan>(new Laserscan));
       readPoints(pointclouds_filenames_[t], *points.back());
       pointsCache_[t] = points.back();
-      if(defaultPoses){
+      if (defaultPoses) {
         points.back()->pose = Eigen::Matrix4f::Identity();
-      }else{
+      } else {
         points.back()->pose = poses_[t];
       }
 
@@ -392,7 +391,7 @@ void KittiReader::update(const std::vector<uint32_t>& indexes, std::vector<Label
   }
 }
 
-//TODO Änderung  ply lesen
+// TODO Änderung  ply lesen
 void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
   std::ifstream in(filename.c_str(), std::ifstream::in);
   if (!in.is_open()) return;
@@ -401,14 +400,13 @@ void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
 
   int len = 0;
   std::string currentLine;
-  while (std::getline(in,currentLine))
-  {
+  while (std::getline(in, currentLine)) {
     len++;
   }
   in.clear();
   in.seekg(0);
 
-  if (len < 3){
+  if (len < 3) {
     std::cout << "Invalid file. Less than 3 lines?" << std::endl;
     return;
   }
@@ -421,13 +419,46 @@ void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
   }
   std::getline(in, currentLine);
 
-  if (currentLine.compare(0, 7,"format ") != 0) {
+  if (currentLine.compare(0, 7, "format ") != 0) {
     std::cout << "Invalid file. Must contain a format on the second line." << std::endl;
     return;
   }
 
-  if (currentLine.length() < 16 || currentLine.compare(7, 9,"ascii 1.0") != 0) {
-    std::cout << "Invalid format. Only accepting \"ascii 1.0\", but found \"" << currentLine.substr(7) << "\"." << std::endl;
+  if (currentLine.length() < 16 || currentLine.compare(7, 9, "ascii 1.0") != 0) {
+    std::cout << "Using a format which is NOT ascii 1.0!" << std::endl;
+
+    // TODO TONY
+    std::vector<Point3f>& points = scan.points;
+    std::vector<uint32_t>& colors = scan.colors;
+    uint32_t num_points = 0;
+
+    happly::PLYData plyIn(filename, false);
+    plyIn.validate();
+
+    std::vector<std::array<double, 3>> vPos = plyIn.getVertexPositions();
+    std::vector<std::array<unsigned char, 3>> vCol = plyIn.getVertexColors();
+
+    num_points = vPos.size();
+
+    for(int i = 0; i < num_points; ++i) {
+      auto [x, y, z] = vPos[i];
+      auto [r, g, b] = vCol[i];
+
+      points.push_back(Point3f(x, y, z));
+      colors.push_back(((r<< 16) + (g << 8) + b));
+    }
+
+
+    in.close();
+
+    if (num_points == 0) {
+      std::cout << "Warning: No valid points found." << std::endl;
+    } else {
+      std::cout << "Found " << num_points << " points." << std::endl;
+    }
+
+    // std::cout << "Invalid format. Only accepting \"ascii 1.0\", but found \"" << currentLine.substr(7) << "\"." <<
+    // std::endl;
     return;
   }
   len -= 2;
@@ -435,12 +466,12 @@ void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
   while (len > 0) {
     std::getline(in, currentLine);
     len--;
-    if(currentLine.compare("end_header") == 0){
+    if (currentLine.compare("end_header") == 0) {
       break;
     }
   }
 
-  if(len <= 0){
+  if (len <= 0) {
     std::cout << "Could not find end of header. (\"end_header\" not found)" << std::endl;
     return;
   }
@@ -448,7 +479,7 @@ void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
   std::vector<Point3f>& points = scan.points;
   std::vector<uint32_t>& colors = scan.colors;
   uint32_t num_points = 0;
-  while (len > 1){
+  while (len > 1) {
     std::getline(in, currentLine);
     len--;
     std::istringstream iss(currentLine);
@@ -458,22 +489,21 @@ void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
       colors.push_back(((std::stoi(results[3]) << 16) + (std::stoi(results[4]) << 8) + std::stoi(results[5])));
       num_points++;
       /* code */
-    }else{
+    } else {
       std::cout << "Warning: Not enough arguments found." << std::endl;
     }
   }
   in.close();
 
-
-  ///string line;
+  /// string line;
   /*
   while(std::getline(in, line)) {
       process(&line);
       }
   */
-  if(num_points == 0){
+  if (num_points == 0) {
     std::cout << "Warning: No valid points found." << std::endl;
-  }else{
+  } else {
     std::cout << "Found " << num_points << " points." << std::endl;
   }
   /*

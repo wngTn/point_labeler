@@ -3,6 +3,9 @@ import numpy as np
 import os
 import glob
 
+# CHANGE HERE PATH
+PATH = '/home/tony/Downloads/holistic_or_export/'
+
 def load_files(path):
     cams = sorted(os.listdir(path))
     current_path = os.path.join(path, cams[0])
@@ -25,8 +28,8 @@ def load_files(path):
 def concat(files):
     files = np.vstack(files)
     
-    for i in range(files.shape[1]):
-    # for i in range(1):
+    # for i in range(files.shape[1]):
+    for i in range(10):
         pointclouds_files = files[:, i]
         base_name = os.path.basename(pointclouds_files[0])
         pointclouds_load = []
@@ -43,12 +46,12 @@ def concat(files):
         pcd.points = o3d.utility.Vector3dVector(pcd_load)
         pcd.colors = o3d.utility.Vector3dVector(pcd_color)
 
-        o3d.io.write_point_cloud(os.path.join('../../../data_2/pointclouds/', base_name), pcd, write_ascii=True)
+        o3d.io.write_point_cloud(os.path.join('../../../data_merged/pointclouds/', base_name), pcd)
         print(f'Written: {base_name}')
 
 
 def main():
-    path = '/home/tony/Downloads/holistic_or_export/'
+    path = PATH
     files = load_files(path)
     concat(files)
 

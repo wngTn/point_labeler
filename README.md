@@ -40,6 +40,14 @@ If you do not have a catkin workspace already, create one:
 cd
 mkdir catkin_ws
 cd catkin_ws
+```
+
+Download some sample dataset and put it into /path/to/catkin_ws/
+```bash
+gdown 1Eooh04zJhRKqaZbnT80zp0EwckwrATcE && unzip zipped_data.zip
+```
+
+```bash
 mkdir src
 catkin init
 cd src

@@ -69,6 +69,7 @@ void KittiReader::initialize(const QString& directory) {
         // while (std::getline(in, currentLine)) {
         //   num_points++;
         // }
+        // TODO maybe not the best way, but since we only do it once it's okay I guess 
         happly::PLYData plyIn(pointclouds_filenames_[i].c_str(), false);
         plyIn.validate();
 

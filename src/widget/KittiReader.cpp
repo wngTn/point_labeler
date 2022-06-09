@@ -95,17 +95,17 @@ void KittiReader::initialize(const QString& directory) {
     label_filenames_.push_back(labels_dir.filePath(filename).toStdString());
   }
 
-  // std::string missing_img = QDir::currentPath().toStdString() + "/../assets/missing.png";
-  // QDir image_dir(base_dir_.filePath("image_2"));
-  // for (uint32_t i = 0; i < pointclouds_filenames_.size(); ++i) {
-  //   QString filename = QFileInfo(QString::fromStdString(pointclouds_filenames_[i])).baseName() + ".png";
-  //   if (image_dir.exists(filename)) {
-  //     image_filenames_.push_back(image_dir.filePath(filename).toStdString());
-  //   } else {
-  //     std::cout << "Note: Missing " << pointclouds_filenames_[i] << ".png" << std::endl;
-  //     image_filenames_.push_back(missing_img);
-  //   }
-  // }
+  std::string missing_img = QDir::currentPath().toStdString() + "/../assets/missing.png";
+  QDir image_dir(base_dir_.filePath("image_2"));
+  for (uint32_t i = 0; i < pointclouds_filenames_.size(); ++i) {
+    QString filename = QFileInfo(QString::fromStdString(pointclouds_filenames_[i])).baseName() + ".png";
+    if (image_dir.exists(filename)) {
+      image_filenames_.push_back(image_dir.filePath(filename).toStdString());
+    } else {
+      std::cout << "Note: Missing " << pointclouds_filenames_[i] << ".png" << std::endl;
+      image_filenames_.push_back(missing_img);
+    }
+  }
 
   // assumes that (0,0,0) is always the start.
   Eigen::Vector2f min = Eigen::Vector2f::Zero();

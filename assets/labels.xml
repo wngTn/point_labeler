@@ -22,16 +22,29 @@
 		<instanceable>true</instanceable>
 	</label>
 
-		<label>
+	<label>
 		<id>2</id>
-		<name>ground</name>
-		<description>Ground of the room</description>
+		<name>floor</name>
+		<description>Floor of the room</description>
 		<color>0 0 255</color>
-		<root>ground</root>
-		<macro>ground</macro>
-		<category>ground</category>
+		<root>floor</root>
+		<macro>floor</macro>
+		<category>floor</category>
 		<instanceable>true</instanceable>
 	</label>
+
+	<label>
+		<id>3</id>
+		<name>person</name>
+		<description>A person in the room</description>
+		<color>0 255 0</color>
+		<root>person</root>
+		<macro>person</macro>
+		<category>person</category>
+		<instanceable>true</instanceable>
+	</label>
+
+
 
 <!-- <label>
     <id>1</id>

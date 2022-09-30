@@ -426,7 +426,7 @@ void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
   }
 
   if (currentLine.length() < 16 || currentLine.compare(7, 9, "ascii 1.0") != 0) {
-    std::cout << "Using a format which is NOT ascii 1.0!" << std::endl;
+    //std::cout << "Using a format which is NOT ascii 1.0!" << std::endl;
 
     // TODO TONY
     std::vector<Point3f>& points = scan.points;

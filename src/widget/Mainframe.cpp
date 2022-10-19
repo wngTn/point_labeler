@@ -701,6 +701,7 @@ void Mainframe::generateLabelButtons() {
 }
 
 void Mainframe::updateFiltering(bool value) {
+  ui.mViewportXYZ->setLabelFiltering(value);
   if (value) {
     ui.mViewportXYZ->setFilteredLabels(filteredLabels);
   } else {

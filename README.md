@@ -83,7 +83,8 @@ into cn01, ..., cn0N folders, like the ATLAS exporter does.
 ## Usage
 
 
-In the `bin` directory, just run `./labeler` to start the labeling tool.
+
+In the `bin` directory, just run `__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia ./labeler` to start the labeling tool. 
 
 The labeling tool allows to label a sequence of point clouds in a tile-based fashion, i.e., the tool loads all scans overlapping with the current tile location.
 Thus, you will always label the part of the scans that overlaps with the current tile.

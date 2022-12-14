@@ -811,6 +811,8 @@ void Viewport::paintGL() {
     texMinimumHeightMap_.bind();
 
     prgDrawPoints_.setUniform(mvp_);
+    prgDrawPoints_.setUniform(GlUniform<uint32_t>("currentLabel", mCurrentLabel));
+    prgDrawPoints_.setUniform(GlUniform<bool>("filterUnselectedLabel", filterLabel));
 
     if (showSingleScan) {
       glDrawArrays(GL_POINTS, scanInfos_[singleScanIdx_].start, scanInfos_[singleScanIdx_].size);

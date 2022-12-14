@@ -124,6 +124,10 @@ class Viewport : public QGLWidget {
     updateGL();
   }
 
+  void setLabelFiltering(bool value) {
+    filterLabel=value;
+  }
+
   void labelInstances(bool value);
   void setMaximumInstanceIds(const std::map<uint32_t, uint32_t>& maxInstanceIds);
   std::map<uint32_t, uint32_t> getMaximumInstanceIds() const;
@@ -351,6 +355,7 @@ class Viewport : public QGLWidget {
   bool labelInstances_{false};
   bool instanceSelectionMode_{false};
   bool instanceSelected_{false};
+  bool filterLabel{false};
   int32_t instanceLabelingMode_{0};
   uint32_t selectedInstanceId_{0};
   uint32_t selectedInstanceLabel_{0};

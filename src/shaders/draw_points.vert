@@ -37,6 +37,8 @@ uniform bool drawInstances;
 uniform uint selectedInstanceId;
 uniform uint selectedInstanceLabel;
 uniform bool hideLabeledInstances;
+uniform uint currentLabel;
+uniform bool filterUnselectedLabel;
 
 out vec4 color;
 
@@ -106,6 +108,10 @@ void main()
 
 
   bool visible = (in_visible > uint(0)) && (!removeGround || in_vertex.z > texture(heightMap, v / tileSize + 0.5).r + groundThreshold);
+
+  if (filterUnselectedLabel) {
+    visible = ((label == currentLabel || label == uint(0)) || currentLabel == uint(0)) && visible;
+  }
 
   if(planeRemovalNormal){
     vec3 pn = (plane_pose * vec4(planeNormal, 0.0)).xyz;

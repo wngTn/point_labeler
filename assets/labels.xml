@@ -13,38 +13,103 @@
 
 	<label>
 		<id>1</id>
-		<name>wall</name>
-		<description>Walls of the room</description>
-		<color>255 0 0</color>
-		<root>wall</root>
-		<macro>wall</macro>
-		<category>wall</category>
-		<instanceable>true</instanceable>
+		<name>floor</name>
+		<description>Floor of the room</description>
+		<color>223 255 0</color>
+		<root>floor</root>
+		<category>floor</category>
 	</label>
 
 	<label>
 		<id>2</id>
-		<name>floor</name>
-		<description>Floor of the room</description>
-		<color>0 0 255</color>
-		<root>floor</root>
-		<macro>floor</macro>
-		<category>floor</category>
-		<instanceable>true</instanceable>
+		<name>wall</name>
+		<description>Walls of the room</description>
+		<color>255 191 0</color>
+		<root>wall</root>
+		<category>wall</category>
 	</label>
 
 	<label>
 		<id>3</id>
 		<name>person</name>
 		<description>A person in the room</description>
-		<color>0 255 0</color>
+		<color>255 127 80</color>
 		<root>person</root>
-		<macro>person</macro>
 		<category>person</category>
-		<instanceable>true</instanceable>
 	</label>
 
+	<label>
+		<id>4</id>
+		<name>patient table</name>
+		<description>The table the patient is lying on</description>
+		<color>222 49 99</color>
+		<root>patient table</root>
+		<category>patient table</category>
+	</label>
 
+	<label>
+		<id>5</id>
+		<name>OR lights</name>
+		<description>The operating room lights</description>
+		<color>159 226 191</color>
+		<root>OR lights</root>
+		<category>OR lights</category>
+	</label>
+	
+	<label>
+		<id>6</id>
+		<name>C-Arm</name>
+		<description>The C-Arm</description>
+		<color>64 224 208</color>
+		<root>C-Arm</root>
+		<category>C-Arm</category>
+	</label>
+
+	
+	<label>
+		<id>7</id>
+		<name>anaesthesia machine</name>
+		<description>The anaesthesia machine</description>
+		<color>100 149 237</color>
+		<root>anaesthesia machine</root>
+		<category>anaesthesia machine</category>
+	</label>
+
+	<label>
+		<id>8</id>
+		<name>tool table</name>
+		<description>The table for the tools</description>
+		<color>204 204 255</color>
+		<root>tool table</root>
+		<category>tool table</category>
+	</label>
+
+	<label>
+		<id>9</id>
+		<name>x-ray blocking gates</name>
+		<description>The gates used for blocking x-ray emission</description>
+		<color>230 159 0</color>
+		<root>x-ray blocking gates</root>
+		<category>x-ray blocking gates</category>
+	</label>
+
+	<label>
+		<id>10</id>
+		<name>patient</name>
+		<description>The patient</description>
+		<color>204 121 167</color>
+		<root>patient</root>
+		<category>patient</category>
+	</label>
+
+	<label>
+		<id>11</id>
+		<name>trash can</name>
+		<description>The trash can</description>
+		<color>0 158 115</color>
+		<root>trash can</root>
+		<category>trash can</category>
+	</label>
 
 <!-- <label>
     <id>1</id>

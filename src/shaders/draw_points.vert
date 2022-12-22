@@ -110,7 +110,7 @@ void main()
   bool visible = (in_visible > uint(0)) && (!removeGround || in_vertex.z > texture(heightMap, v / tileSize + 0.5).r + groundThreshold);
 
   if (filterUnselectedLabel) {
-    visible = ((label == currentLabel || label == uint(0)) || currentLabel == uint(0)) && visible;
+    visible = (label == currentLabel || label == uint(0)) && visible;
   }
 
   if(planeRemovalNormal){

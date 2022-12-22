@@ -442,11 +442,11 @@ void KittiReader::readPoints(const std::string& filename, Laserscan& scan) {
     num_points = vPos.size();
 
     for(int i = 0; i < num_points; ++i) {
-      auto [x, y, z] = vPos[i];
-      auto [r, g, b] = vCol[i];
+      auto position = vPos[i];
+      auto color = vCol[i];
 
-      points.push_back(Point3f(x, y, z));
-      colors.push_back(((r<< 16) + (g << 8) + b));
+      points.push_back(Point3f(position[0], position[1], position[2]));
+      colors.push_back(((color[0] << 16) + (color[1] << 8) + color[2]));
     }
 
 

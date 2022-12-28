@@ -111,6 +111,14 @@
 		<category>trash can</category>
 	</label>
 
+	<label>
+		<id>12</id>
+		<name>monitor tower</name>
+		<description>The monitor tower</description>
+		<color>106 90 205</color>
+		<root>monitor tower</root>
+		<category>monitor tower</category>
+	</label>
 <!-- <label>
     <id>1</id>
     <name>outlier</name>

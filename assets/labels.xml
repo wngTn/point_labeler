@@ -119,6 +119,15 @@
 		<root>monitor tower</root>
 		<category>monitor tower</category>
 	</label>
+
+	<label>
+		<id>13</id>
+		<name>void class</name>
+    <description>Void / Null Class</description>
+		<color>0 0 0</color>
+		<root>void class</root>
+		<category>void class</category>
+	</label>
 <!-- <label>
     <id>1</id>
     <name>outlier</name>
